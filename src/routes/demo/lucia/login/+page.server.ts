@@ -1,96 +1,87 @@
-import { hash, verify } from "@node-rs/argon2"
-import { encodeBase32LowerCase } from "@oslojs/encoding"
+import { hash, verify, type Options } from "@node-rs/argon2"
 import { fail, redirect } from "@sveltejs/kit"
 import { eq } from "drizzle-orm"
 
-import * as auth from "$lib/server/auth"
-import { db } from "$lib/server/db"
-import * as table from "$lib/server/db/schema"
+import * as server from "$lib/server"
 
 import type { Actions, PageServerLoad } from "./$types"
 
+const HASH_OPTIONS: Options = {
+	// Recommended Minimum Parameters
+	memoryCost: 19456,
+	timeCost: 2,
+	outputLen: 32,
+	parallelism: 1,
+}
+
+// MARK: Load
+
 export const load: PageServerLoad = async (event) => {
-	if (event.locals.user) {
-		return redirect(302, "/demo/lucia")
-	}
+	if (event.locals.user) return redirect(302, "/demo/lucia")
 	return {}
 }
 
+// MARK: Actions
+
 export const actions: Actions = {
+	// MARK: - Login
 	login: async (event) => {
 		const formData = await event.request.formData()
 		const username = formData.get("username")
 		const password = formData.get("password")
 
-		if (!validateUsername(username)) {
-			return fail(400, { message: "Invalid username" })
-		}
-		if (!validatePassword(password)) {
-			return fail(400, { message: "Invalid password" })
-		}
+		// Validate the username and password
+		if (!validateUsername(username)) return fail(400, { message: "Invalid username" })
+		if (!validatePassword(password)) return fail(400, { message: "Invalid password" })
 
-		const results = await db.select().from(table.user).where(eq(table.user.username, username))
+		const [dbResult] = await server.db.client
+			.select()
+			.from(server.db.table.user)
+			.where(eq(server.db.table.user.username, username))
+			.limit(1)
 
-		const existingUser = results.at(0)
-		if (!existingUser) {
-			return fail(400, { message: "Incorrect username or password" })
-		}
+		// Check if the user exists
+		if (!dbResult) return fail(400, { message: "Incorrect username or password" })
 
-		const validPassword = await verify(existingUser.passwordHash, password, {
-			memoryCost: 19456,
-			timeCost: 2,
-			outputLen: 32,
-			parallelism: 1,
-		})
-		if (!validPassword) {
-			return fail(400, { message: "Incorrect username or password" })
-		}
+		// Check if the password is correct
+		const validPassword = await verify(dbResult.passwordHash, password, HASH_OPTIONS)
+		if (!validPassword) return fail(400, { message: "Incorrect username or password" })
 
-		const sessionToken = auth.generateSessionToken()
-		const session = await auth.createSession(sessionToken, existingUser.id)
-		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt)
+		// Begin a new session
+		const session = await server.auth.createSession(dbResult.id)
+		server.auth.setSessionTokenCookie(event, session.id, session.expiresAt)
 
 		return redirect(302, "/demo/lucia")
 	},
+	// MARK: - Register
 	register: async (event) => {
 		const formData = await event.request.formData()
 		const username = formData.get("username")
 		const password = formData.get("password")
 
-		if (!validateUsername(username)) {
-			return fail(400, { message: "Invalid username" })
-		}
-		if (!validatePassword(password)) {
-			return fail(400, { message: "Invalid password" })
-		}
+		// Validate the username and password
+		if (!validateUsername(username)) return fail(400, { message: "Invalid username" })
+		if (!validatePassword(password)) return fail(400, { message: "Invalid password" })
 
-		const userId = generateUserId()
-		const passwordHash = await hash(password, {
-			// recommended minimum parameters
-			memoryCost: 19456,
-			timeCost: 2,
-			outputLen: 32,
-			parallelism: 1,
-		})
+		// Hash the password
+		const passwordHash = await hash(password, HASH_OPTIONS)
 
+		// Insert the user into the database
 		try {
-			await db.insert(table.user).values({ id: userId, username, passwordHash })
+			const dbResponse = await server.db.client
+				.insert(server.db.table.user)
+				.values({ username, passwordHash })
+				.returning()
 
-			const sessionToken = auth.generateSessionToken()
-			const session = await auth.createSession(sessionToken, userId)
-			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt)
+			const session = await server.auth.createSession(dbResponse[0].id)
+			server.auth.setSessionTokenCookie(event, session.id, session.expiresAt)
 		} catch {
 			return fail(500, { message: "An error has occurred" })
 		}
+
+		// Redirect the user to the dashboard
 		return redirect(302, "/demo/lucia")
 	},
-}
-
-function generateUserId() {
-	// ID with 120 bits of entropy, or about the same as UUID v4.
-	const bytes = crypto.getRandomValues(new Uint8Array(15))
-	const id = encodeBase32LowerCase(bytes)
-	return id
 }
 
 function validateUsername(username: unknown): username is string {

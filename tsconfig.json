@@ -9,7 +9,19 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		"moduleResolution": "bundler"
+		"moduleResolution": "bundler",
+
+		/** 
+			Testing Globals
+			see: https://vitest.dev/config/#globals
+		*/
+		"types": ["vitest/globals"],
+
+		/**
+			Enabled as it allows us to visually distinguish between `.svelte` and `.svelte.ts` file imports
+			see: https://svelte.dev/docs/svelte/svelte-js-files
+		 */
+		"allowImportingTsExtensions": true
 	}
 	// Path aliases are handled by https://svelte.dev/docs/kit/configuration#alias
 	// except $lib which is handled by https://svelte.dev/docs/kit/configuration#files
