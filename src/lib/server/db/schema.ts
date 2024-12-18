@@ -1,6 +1,11 @@
 import { integer, pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core"
 import { encodeBase64url } from "@oslojs/encoding"
 
+function randomStr(length: number) {
+	const bytes = crypto.getRandomValues(new Uint8Array(length))
+	return encodeBase64url(bytes)
+}
+
 // MARK: Base
 
 // This is a base resource that all other resources will inherit from.
@@ -39,11 +44,7 @@ export const session = pgTable("session", {
 	expiresAt: timestamp("expires_at", { withTimezone: true, mode: "date" }).notNull(),
 	id: text("id")
 		.primaryKey()
-		.$defaultFn(() => {
-			const bytes = crypto.getRandomValues(new Uint8Array(18))
-			const token = encodeBase64url(bytes)
-			return token
-		}),
+		.$defaultFn(() => randomStr(32)),
 	userId: uuid("user_id")
 		.notNull()
 		.references(() => user.id),

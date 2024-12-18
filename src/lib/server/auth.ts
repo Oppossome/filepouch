@@ -1,3 +1,4 @@
+import { hash, verify } from "@node-rs/argon2"
 import type { RequestEvent } from "@sveltejs/kit"
 import { eq } from "drizzle-orm"
 
@@ -71,5 +72,27 @@ export function setSessionTokenCookie(event: RequestEvent, token: string, expire
 export function deleteSessionTokenCookie(event: RequestEvent) {
 	event.cookies.delete(sessionCookieName, {
 		path: "/",
+	})
+}
+
+// MARK: Password Handling
+
+export function hashPassword(password: string) {
+	return hash(password, {
+		// Recommended Minimum Parameters
+		memoryCost: 19456,
+		timeCost: 2,
+		outputLen: 32,
+		parallelism: 1,
+	})
+}
+
+export function verifyPassword(hash: string, password: string) {
+	return verify(hash, password, {
+		// Recommended Minimum Parameters
+		memoryCost: 19456,
+		timeCost: 2,
+		outputLen: 32,
+		parallelism: 1,
 	})
 }

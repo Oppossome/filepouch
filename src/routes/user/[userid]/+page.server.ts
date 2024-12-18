@@ -19,6 +19,7 @@ export const load: PageServerLoad = async (event) => {
 		user: {
 			id: user.id,
 			username: user.username,
+			role: user.role,
 		},
 	}
 }
