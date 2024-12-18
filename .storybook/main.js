@@ -1,5 +1,3 @@
-import "../src/app.css"
-
 /** @type { import('@storybook/sveltekit').StorybookConfig } */
 const config = {
 	stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|ts|svelte)"],
