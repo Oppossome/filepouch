@@ -1,6 +1,6 @@
 <script>
-	import './header.css';
-	import Button from './Button.svelte';
+	import "./header.css"
+	import Button from "./Button.svelte"
 
 	/**
 	 * @typedef {Object} Props
@@ -11,7 +11,7 @@
 	 */
 
 	/** @type {Props} */
-	const { user, onLogin, onLogout, onCreateAccount } = $props();
+	const { user, onLogin, onLogout, onCreateAccount } = $props()
 </script>
 
 <header>

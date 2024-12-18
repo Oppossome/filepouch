@@ -1,16 +1,16 @@
 <script>
-	import './page.css';
-	import Header from './Header.svelte';
+	import "./page.css"
+	import Header from "./Header.svelte"
 
-	let user = $state(null);
+	let user = $state(null)
 </script>
 
 <article>
 	<Header
 		{user}
-		onLogin={() => (user = { name: 'Jane Doe' })}
+		onLogin={() => (user = { name: "Jane Doe" })}
 		onLogout={() => (user = null)}
-		onCreateAccount={() => (user = { name: 'Jane Doe' })}
+		onCreateAccount={() => (user = { name: "Jane Doe" })}
 	/>
 
 	<section class="storybook-page">

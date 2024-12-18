@@ -1,5 +1,5 @@
 <script>
-	import './button.css';
+	import "./button.css"
 
 	/**
 	 * @typedef {Object} Props
@@ -11,12 +11,12 @@
 	 */
 
 	/** @type {Props} */
-	const { primary = false, backgroundColor, size = 'medium', label, onClick } = $props();
+	const { primary = false, backgroundColor, size = "medium", label, onClick } = $props()
 </script>
 
 <button
 	type="button"
-	class={['storybook-button', `storybook-button--${size}`].join(' ')}
+	class={["storybook-button", `storybook-button--${size}`].join(" ")}
 	class:storybook-button--primary={primary}
 	class:storybook-button--secondary={!primary}
 	style:background-color={backgroundColor}
