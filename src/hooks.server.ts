@@ -1,16 +1,21 @@
-import { lt } from "drizzle-orm"
 import type { Handle } from "@sveltejs/kit"
 
-import * as server from "$lib/server"
+import { type DBProvider, initDbProvider } from "$lib/server/db"
+import { initAuthProvider } from "$lib/server/auth"
 
-export const init = async () => {
-	// Prune expired sessions on startup
-	await server.db.client
-		.delete(server.db.table.session)
-		.where(lt(server.db.table.session.expiresAt, new Date()))
-}
+// MARK: Initialization
+
+const dbProvider: DBProvider = await initDbProvider()
+
+// MARK: Request Handling
 
 export const handle: Handle = async ({ event, resolve }) => {
+	// Initialize the server locals
+	const db = await dbProvider(event)
+	const server = { auth: initAuthProvider(db), db }
+	event.locals.server = server
+
+	// Retrieve the session token from the cookies
 	const sessionToken = event.cookies.get(server.auth.sessionCookieName)
 	if (!sessionToken) {
 		event.locals.user = null
@@ -18,6 +23,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		return resolve(event)
 	}
 
+	// Validate the session token
 	const { session, user } = await server.auth.validateSessionToken(sessionToken)
 	if (session) {
 		server.auth.setSessionTokenCookie(event, sessionToken, session.expiresAt)
@@ -25,6 +31,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 		server.auth.deleteSessionTokenCookie(event)
 	}
 
+	// Attach the user and session to the event
 	event.locals.user = user
 	event.locals.session = session
 

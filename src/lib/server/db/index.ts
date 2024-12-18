@@ -1,14 +1,30 @@
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js"
+import type { RequestEvent } from "@sveltejs/kit"
 import { drizzle } from "drizzle-orm/postgres-js"
 import postgres from "postgres"
 
 import { env } from "$env/dynamic/private"
 
-// Ensure that the DATABASE_URL environment variable is set.
-if (!env.DATABASE_URL) throw new Error("DATABASE_URL is not set")
+import * as tables from "$lib/server/db/schema"
 
-// This is the database client that will be used to query the database.
+export type DBProvider = (event: RequestEvent) => Promise<{
+	client: PostgresJsDatabase
+	tables: typeof tables
+}>
 
-const dbClient = postgres(env.DATABASE_URL)
+export async function initDbProvider(): Promise<DBProvider> {
+	switch (true) {
+		// Typical database provider for production and development environments.
+		case env.DATABASE_URL !== undefined: {
+			const postgresClient = postgres(env.DATABASE_URL)
+			const dbClient = drizzle(postgresClient)
 
-export const client = drizzle(dbClient)
-export * as table from "./schema"
+			return async () => ({
+				client: dbClient,
+				tables,
+			})
+		}
+		default:
+			throw new Error("DATABASE_URL is not set")
+	}
+}

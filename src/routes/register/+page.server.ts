@@ -3,8 +3,6 @@ import { redirect } from "@sveltejs/kit"
 import { fail, setError, superValidate } from "sveltekit-superforms"
 import { zod } from "sveltekit-superforms/adapters"
 
-import * as server from "$lib/server"
-
 import type { PageServerLoad, Actions } from "./$types"
 import { registerSchema } from "./form.svelte"
 
@@ -16,6 +14,8 @@ export const load: PageServerLoad = async (event) => {
 
 export const actions: Actions = {
 	default: async (event) => {
+		const server = event.locals.server
+
 		// Validate the form
 		const form = await superValidate(event, zod(registerSchema))
 		if (!form.valid) return fail(400, { form })
@@ -23,8 +23,8 @@ export const actions: Actions = {
 		// Check if the username already exists
 		const [dbResult] = await server.db.client
 			.select()
-			.from(server.db.table.user)
-			.where(eq(server.db.table.user.username, form.data.username))
+			.from(server.db.tables.user)
+			.where(eq(server.db.tables.user.username, form.data.username))
 			.limit(1)
 
 		if (dbResult) return setError(form, "username", "Username already exists")
@@ -33,7 +33,7 @@ export const actions: Actions = {
 			// Hash the password
 			const passwordHash = await server.auth.hashPassword(form.data.password)
 			const [dbResult] = await server.db.client
-				.insert(server.db.table.user)
+				.insert(server.db.tables.user)
 				.values({
 					username: form.data.username,
 					passwordHash,
