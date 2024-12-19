@@ -41,8 +41,8 @@ export const actions: Actions = {
 				.returning()
 
 			// Begin a new session
-			const session = await server.auth.createSession(dbResult.id)
-			server.auth.setSessionTokenCookie(event, session.id, session.expiresAt)
+			const { token, session } = await server.auth.createSession(dbResult.id)
+			server.auth.setSessionTokenCookie(event, token, session.expiresAt)
 
 			// Redirect to the user's page
 			return redirect(302, "/user/" + dbResult.id)

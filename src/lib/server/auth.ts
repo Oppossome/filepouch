@@ -1,6 +1,10 @@
 import { hash, verify } from "@node-rs/argon2"
+import { encodeHexLowerCase } from "@oslojs/encoding"
+import { sha256 } from "@oslojs/crypto/sha2"
 import type { RequestEvent } from "@sveltejs/kit"
 import { eq } from "drizzle-orm"
+
+import { randomStr } from "$lib/utils"
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24
 
@@ -11,16 +15,34 @@ export type SessionValidationResult = Awaited<ReturnType<AuthProvider["validateS
 
 export function initAuthProvider(db: App.Locals["server"]["db"]) {
 	return {
-		// MARK: Session
+		// MARK: Session Handlers
 		createSession: async (userId: string) => {
+			// Generate a random session token
+			const sessionToken = randomStr(32)
+
+			// Hash the session token to use as the session ID that's stored in the database
+			// This way, even if the database is compromised, the session tokens are not exposed
+			const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(sessionToken)))
 			const [dbResult] = await db.client
 				.insert(db.tables.session)
-				.values({ userId, expiresAt: new Date(Date.now() + DAY_IN_MS * 30) })
+				.values({
+					id: sessionId,
+					userId,
+					expiresAt: new Date(Date.now() + DAY_IN_MS * 30),
+				})
 				.returning()
 
-			return dbResult
+			// Return the session token and the session data
+			return {
+				token: sessionToken,
+				session: dbResult,
+			}
 		},
-		validateSessionToken: async (token: string) => {
+		validateSessionToken: async (sessionToken: string) => {
+			// Hash the session token to use as the session ID that's stored in the database
+			const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(sessionToken)))
+
+			// Retrieve the session and user data from the database
 			const [dbResult] = await db.client
 				.select({
 					// Adjust user table here to tweak returned data
@@ -29,7 +51,7 @@ export function initAuthProvider(db: App.Locals["server"]["db"]) {
 				})
 				.from(db.tables.session)
 				.innerJoin(db.tables.user, eq(db.tables.session.userId, db.tables.user.id))
-				.where(eq(db.tables.session.id, token))
+				.where(eq(db.tables.session.id, sessionId))
 				.limit(1)
 
 			if (!dbResult) return { session: null, user: null }
@@ -58,7 +80,7 @@ export function initAuthProvider(db: App.Locals["server"]["db"]) {
 			return db.client.delete(db.tables.session).where(eq(db.tables.session.id, sessionId))
 		},
 
-		// MARK: Cookie
+		// MARK: Cookie Handlers
 		sessionCookieName,
 		setSessionTokenCookie: (event: RequestEvent, token: string, expiresAt: Date) => {
 			event.cookies.set(sessionCookieName, token, {
@@ -72,7 +94,7 @@ export function initAuthProvider(db: App.Locals["server"]["db"]) {
 			})
 		},
 
-		// MARK: Password
+		// MARK: Password Handlers
 		hashPassword: (password: string) => {
 			return hash(password, {
 				// Recommended Minimum Parameters

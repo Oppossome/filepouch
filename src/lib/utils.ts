@@ -1,3 +1,4 @@
+import { encodeBase64url } from "@oslojs/encoding"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -24,4 +25,21 @@ import { twMerge } from "tailwind-merge"
  */
 export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
+}
+
+// MARK: randomStr
+
+/**
+ * Generates a random string of the specified length.
+ *
+ * This function uses the `crypto.getRandomValues` method to generate a
+ * cryptographically secure random sequence of bytes, which is then
+ * encoded using Base64 URL encoding.
+ *
+ * @param {number} length - The length of the random string to generate.
+ * @returns {string} A Base64 URL encoded random string of the specified length.
+ */
+export function randomStr(length: number) {
+	const bytes = crypto.getRandomValues(new Uint8Array(length))
+	return encodeBase64url(bytes)
 }

@@ -1,10 +1,4 @@
 import { integer, pgEnum, pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core"
-import { encodeBase64url } from "@oslojs/encoding"
-
-function randomStr(length: number) {
-	const bytes = crypto.getRandomValues(new Uint8Array(length))
-	return encodeBase64url(bytes)
-}
 
 // MARK: Base
 
@@ -41,13 +35,11 @@ export type User = typeof user.$inferSelect
 // MARK: Session
 
 export const session = pgTable("session", {
-	expiresAt: timestamp("expires_at", { withTimezone: true, mode: "date" }).notNull(),
-	id: text("id")
-		.primaryKey()
-		.$defaultFn(() => randomStr(32)),
+	id: text("id").primaryKey(),
 	userId: uuid("user_id")
 		.notNull()
 		.references(() => user.id),
+	expiresAt: timestamp("expires_at", { withTimezone: true, mode: "date" }).notNull(),
 })
 
 export type Session = typeof session.$inferSelect

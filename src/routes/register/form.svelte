@@ -11,6 +11,7 @@
 		})
 		.refine((data) => data.password === data.password_confirmation, {
 			message: "Passwords do not match",
+			path: ["password_confirmation"],
 		})
 </script>
 
