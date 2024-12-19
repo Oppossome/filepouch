@@ -10,5 +10,5 @@ export const load: PageServerLoad = async (event) => {
 		server.auth.deleteSessionTokenCookie(event)
 	}
 
-	return redirect(302, "/login")
+	redirect(302, "/login")
 }

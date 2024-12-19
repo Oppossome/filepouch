@@ -60,7 +60,7 @@ export default ts.config(
 							position: "after",
 						},
 					],
-					groups: [["builtin", "external"], "internal", ["parent", "sibling", "index"]],
+					groups: ["builtin", "external", "internal", ["parent", "sibling", "index"]],
 				},
 			],
 			"import/no-unresolved": [

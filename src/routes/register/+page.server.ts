@@ -8,7 +8,7 @@ import { registerSchema } from "./form.svelte"
 
 export const load: PageServerLoad = async (event) => {
 	if (event.locals.user) {
-		return redirect(302, "/user/" + event.locals.user.id)
+		redirect(302, "/user/" + event.locals.user.id)
 	}
 }
 
@@ -21,33 +21,31 @@ export const actions: Actions = {
 		if (!form.valid) return fail(400, { form })
 
 		// Check if the username already exists
-		const [dbResult] = await server.db.client
+		const [existingUser] = await server.db.client
 			.select()
 			.from(server.db.tables.user)
 			.where(eq(server.db.tables.user.username, form.data.username))
 			.limit(1)
 
-		if (dbResult) return setError(form, "username", "Username already exists")
-
-		try {
-			// Hash the password
-			const passwordHash = await server.auth.hashPassword(form.data.password)
-			const [dbResult] = await server.db.client
-				.insert(server.db.tables.user)
-				.values({
-					username: form.data.username,
-					passwordHash,
-				})
-				.returning()
-
-			// Begin a new session
-			const { token, session } = await server.auth.createSession(dbResult.id)
-			server.auth.setSessionTokenCookie(event, token, session.expiresAt)
-
-			// Redirect to the user's page
-			return redirect(302, "/user/" + dbResult.id)
-		} catch {
-			return fail(500, { message: "An error occurred" })
+		if (existingUser) {
+			return setError(form, "username", "Username already exists")
 		}
+
+		// Hash the password
+		const passwordHash = await server.auth.hashPassword(form.data.password)
+		const [newUser] = await server.db.client
+			.insert(server.db.tables.user)
+			.values({
+				username: form.data.username,
+				passwordHash,
+			})
+			.returning()
+
+		// Begin a new session
+		const { token, session } = await server.auth.createSession(newUser.id)
+		server.auth.setSessionTokenCookie(event, token, session.expiresAt)
+
+		// Redirect to the user's page
+		redirect(302, "/user/" + newUser.id)
 	},
 }

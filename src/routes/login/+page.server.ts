@@ -8,7 +8,7 @@ import { loginSchema } from "./form.svelte"
 
 export const load: PageServerLoad = async (event) => {
 	if (event.locals.user) {
-		return redirect(302, "/user/" + event.locals.user.id)
+		redirect(302, "/user/" + event.locals.user.id)
 	}
 }
 
@@ -41,6 +41,6 @@ export const actions: Actions = {
 		server.auth.setSessionTokenCookie(event, token, session.expiresAt)
 
 		// Redirect to the user's page
-		return redirect(302, "/user/" + dbResult.id)
+		redirect(303, "/user/" + dbResult.id)
 	},
 }
