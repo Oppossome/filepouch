@@ -32,7 +32,7 @@ async function createDatabase() {
 
 	// Return the postgres client for the new database
 	return {
-		url: databaseURL,
+		url: databasURL,
 		client: postgres(databaseURL),
 	}
 }
