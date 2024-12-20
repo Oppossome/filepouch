@@ -7,8 +7,8 @@ export const load: PageServerLoad = async (event) => {
 	const server = event.locals.server
 	const dbResponse = await server.db.client
 		.select()
-		.from(server.db.tables.user)
-		.where(eq(server.db.tables.user.id, event.params.userid))
+		.from(server.db.schema.user)
+		.where(eq(server.db.schema.user.id, event.params.userid))
 		.limit(1)
 
 	const user = dbResponse.at(0)

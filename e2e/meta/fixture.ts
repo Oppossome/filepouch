@@ -48,7 +48,7 @@ export const test = base.extend<Fixture>({
 
 		// Set the database ID as a header, so the server knows which database to use
 		await page.setExtraHTTPHeaders({ "X-Playwright-DB": url })
-		await use({ client: drizzle(client), tables: schema })
+		await use({ client: drizzle(client), schema })
 
 		// Teardown the database after the test
 		await client.end()

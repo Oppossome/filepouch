@@ -5,11 +5,11 @@ import postgres from "postgres"
 
 import { env } from "$env/dynamic/private"
 
-import * as tables from "$lib/server/db/schema"
+import * as schema from "$lib/server/db/schema"
 
 export type DBProvider = (event: RequestEvent) => Promise<{
 	client: PostgresJsDatabase
-	tables: typeof tables
+	schema: typeof import("$lib/server/db/schema")
 }>
 
 export async function initDbProvider(): Promise<DBProvider> {
@@ -25,14 +25,14 @@ export async function initDbProvider(): Promise<DBProvider> {
 				if (!eventDbUrl) throw new Error("X-Playwright-DB header is not set")
 
 				const dbClient = dbClients.get(eventDbUrl)
-				if (dbClient) return { client: dbClient, tables: tables }
+				if (dbClient) return { client: dbClient, schema }
 
 				// Initialize a new database client for the playwright test
 				const postgresClient = postgres(eventDbUrl)
 				const newDbClient = drizzle(postgresClient)
 
 				dbClients.set(eventDbUrl, newDbClient)
-				return { client: newDbClient, tables: tables }
+				return { client: newDbClient, schema }
 			}
 		}
 
@@ -43,7 +43,7 @@ export async function initDbProvider(): Promise<DBProvider> {
 
 			return async () => ({
 				client: dbClient,
-				tables,
+				schema,
 			})
 		}
 

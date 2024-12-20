@@ -23,8 +23,8 @@ export const actions: Actions = {
 		// Check if the username already exists
 		const [existingUser] = await server.db.client
 			.select()
-			.from(server.db.tables.user)
-			.where(eq(server.db.tables.user.username, form.data.username))
+			.from(server.db.schema.user)
+			.where(eq(server.db.schema.user.username, form.data.username))
 			.limit(1)
 
 		if (existingUser) {
@@ -34,7 +34,7 @@ export const actions: Actions = {
 		// Hash the password
 		const passwordHash = await server.auth.hashPassword(form.data.password)
 		const [newUser] = await server.db.client
-			.insert(server.db.tables.user)
+			.insert(server.db.schema.user)
 			.values({
 				username: form.data.username,
 				passwordHash,
