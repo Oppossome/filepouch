@@ -24,7 +24,7 @@ export function initAuthProvider(db: App.Locals["server"]["db"]) {
 
 			// Insert the session into the database
 			const [dbResult] = await db.client
-				.insert(db.tables.session)
+				.insert(db.schema.session)
 				.values({
 					id: sessionId,
 					userId,
@@ -45,12 +45,12 @@ export function initAuthProvider(db: App.Locals["server"]["db"]) {
 			const [dbResult] = await db.client
 				.select({
 					// Adjust user table here to tweak returned data
-					user: { id: db.tables.user.id, username: db.tables.user.username },
-					session: db.tables.session,
+					user: { id: db.schema.user.id, username: db.schema.user.username },
+					session: db.schema.session,
 				})
-				.from(db.tables.session)
-				.innerJoin(db.tables.user, eq(db.tables.session.userId, db.tables.user.id))
-				.where(eq(db.tables.session.id, sessionId))
+				.from(db.schema.session)
+				.innerJoin(db.schema.user, eq(db.schema.session.userId, db.schema.user.id))
+				.where(eq(db.schema.session.id, sessionId))
 				.limit(1)
 
 			if (!dbResult) return { session: null, user: null }
@@ -59,7 +59,7 @@ export function initAuthProvider(db: App.Locals["server"]["db"]) {
 			// Delete session if it's expired
 			const sessionExpired = Date.now() >= session.expiresAt.getTime()
 			if (sessionExpired) {
-				await db.client.delete(db.tables.session).where(eq(db.tables.session.id, session.id))
+				await db.client.delete(db.schema.session).where(eq(db.schema.session.id, session.id))
 				return { session: null, user: null }
 			}
 
@@ -68,15 +68,15 @@ export function initAuthProvider(db: App.Locals["server"]["db"]) {
 			if (renewSession) {
 				session.expiresAt = new Date(Date.now() + DAY_IN_MS * 30)
 				await db.client
-					.update(db.tables.session)
+					.update(db.schema.session)
 					.set({ expiresAt: session.expiresAt })
-					.where(eq(db.tables.session.id, session.id))
+					.where(eq(db.schema.session.id, session.id))
 			}
 
 			return { session, user }
 		},
 		invalidateSession: async (sessionId: string) => {
-			return db.client.delete(db.tables.session).where(eq(db.tables.session.id, sessionId))
+			return db.client.delete(db.schema.session).where(eq(db.schema.session.id, sessionId))
 		},
 
 		// MARK: Cookie Handlers

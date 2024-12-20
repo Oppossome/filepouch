@@ -23,8 +23,8 @@ export const actions: Actions = {
 		// Retrieve user from database
 		const [dbResult] = await server.db.client
 			.select()
-			.from(server.db.tables.user)
-			.where(eq(server.db.tables.user.username, form.data.username))
+			.from(server.db.schema.user)
+			.where(eq(server.db.schema.user.username, form.data.username))
 			.limit(1)
 
 		if (!dbResult) return setError(form, "username", "Incorrect username or password")

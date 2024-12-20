@@ -22,7 +22,7 @@ test.describe("session", () => {
 		await page.waitForURL(/^.*\/user/)
 
 		// Check that the user was created in the database
-		const dbUsers = await db.client.select().from(db.tables.user)
+		const dbUsers = await db.client.select().from(db.schema.user)
 		expect(dbUsers).toHaveLength(1)
 		expect(dbUsers[0].username).toBe("test")
 		expect(dbUsers[0].role).toBe("user")
@@ -36,8 +36,8 @@ test.describe("session", () => {
 		// Retrieve the associated session from the database
 		const dbSessions = await db.client
 			.select()
-			.from(db.tables.session)
-			.where(eq(db.tables.session.id, hashStr(decodeURIComponent(sessionCookie!.value))))
+			.from(db.schema.session)
+			.where(eq(db.schema.session.id, hashStr(decodeURIComponent(sessionCookie!.value))))
 
 		expect(dbSessions).toHaveLength(1)
 		expect(dbSessions[0].userId).toBe(dbUsers[0].id)
@@ -48,7 +48,7 @@ test.describe("session", () => {
 		// Register a user in our database
 		const authProvider = initAuthProvider(db)
 		const [newUser] = await db.client
-			.insert(db.tables.user)
+			.insert(db.schema.user)
 			.values({
 				username: "test",
 				passwordHash: await authProvider.hashPassword("password"),
@@ -70,8 +70,8 @@ test.describe("session", () => {
 		// Retrieve the associated session from the database
 		const dbSessions = await db.client
 			.select()
-			.from(db.tables.session)
-			.where(eq(db.tables.session.id, hashStr(decodeURIComponent(sessionCookie!.value))))
+			.from(db.schema.session)
+			.where(eq(db.schema.session.id, hashStr(decodeURIComponent(sessionCookie!.value))))
 
 		expect(dbSessions).toHaveLength(1)
 		expect(dbSessions[0].userId).toBe(newUser.id)
@@ -82,7 +82,7 @@ test.describe("session", () => {
 		await page.waitForURL(/^.*\/login/)
 
 		// Check that the session was invalidated
-		const dbSessionsAfterLogout = await db.client.select().from(db.tables.session)
+		const dbSessionsAfterLogout = await db.client.select().from(db.schema.session)
 		expect(dbSessionsAfterLogout).toHaveLength(0)
 
 		// Check that the session cookie was deleted

@@ -20,8 +20,8 @@ async function createDatabase() {
 	const databaseURL = `${env.DATABASE_URL}/${databaseID}`
 	await new Promise<void>((resolve, reject) => {
 		const process = spawn("pnpm", ["db:push", "--force"], {
+			// stdio: "inherit", // Uncomment this line to see the output of the db:push command
 			env: { ...env, DATABASE_URL: databaseURL },
-			stdio: "inherit",
 		})
 
 		process.on("close", (code) => {
@@ -48,7 +48,7 @@ export const test = base.extend<Fixture>({
 
 		// Set the database ID as a header, so the server knows which database to use
 		await page.setExtraHTTPHeaders({ "X-Playwright-DB": url })
-		await use({ client: drizzle(client), tables: schema })
+		await use({ client: drizzle(client), schema })
 
 		// Teardown the database after the test
 		await client.end()
