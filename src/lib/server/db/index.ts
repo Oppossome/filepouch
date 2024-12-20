@@ -20,7 +20,7 @@ export async function initDbProvider(): Promise<DBProvider> {
 			const dbClients = new Map<string, PostgresJsDatabase>()
 
 			return async (event) => {
-				// Retrieve the database name from the cookie
+				// Retrieve the database URL from the headers for the playwright test
 				const eventDbUrl = event.request.headers.get("X-Playwright-DB")
 				if (!eventDbUrl) throw new Error("X-Playwright-DB header is not set")
 
