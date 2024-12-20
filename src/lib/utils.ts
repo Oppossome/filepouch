@@ -1,4 +1,5 @@
-import { encodeBase64url } from "@oslojs/encoding"
+import { encodeBase64url, encodeHexLowerCase } from "@oslojs/encoding"
+import { sha256 } from "@oslojs/crypto/sha2"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -42,4 +43,20 @@ export function cn(...inputs: ClassValue[]) {
 export function randomStr(length: number) {
 	const bytes = crypto.getRandomValues(new Uint8Array(length))
 	return encodeBase64url(bytes)
+}
+
+// MARK: hashStr
+
+/**
+ * Hashes a given string using the SHA-256 algorithm and encodes the result in lowercase hexadecimal format.
+ *
+ * This function uses the `TextEncoder` to convert the input string to a `Uint8Array`,
+ * then computes the SHA-256 hash of the byte array, and finally encodes the hash
+ * in lowercase hexadecimal format.
+ *
+ * @param {string} str - The input string to be hashed.
+ * @returns {string} The SHA-256 hash of the input string, encoded in lowercase hexadecimal format.
+ */
+export function hashStr(str: string) {
+	return encodeHexLowerCase(sha256(new TextEncoder().encode(str)))
 }

@@ -1,10 +1,8 @@
 import { hash, verify } from "@node-rs/argon2"
-import { encodeHexLowerCase } from "@oslojs/encoding"
-import { sha256 } from "@oslojs/crypto/sha2"
 import type { RequestEvent } from "@sveltejs/kit"
 import { eq } from "drizzle-orm"
 
-import { randomStr } from "$lib/utils"
+import { hashStr, randomStr } from "$lib/utils"
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24
 
@@ -20,9 +18,11 @@ export function initAuthProvider(db: App.Locals["server"]["db"]) {
 			// Generate a random session token
 			const sessionToken = randomStr(32)
 
-			// Hash the session token to use as the session ID that's stored in the database
+			// Hash the session token to use at the session ID
 			// This way, even if the database is compromised, the session tokens are not exposed
-			const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(sessionToken)))
+			const sessionId = hashStr(sessionToken)
+
+			// Insert the session into the database
 			const [dbResult] = await db.client
 				.insert(db.tables.session)
 				.values({
@@ -39,8 +39,7 @@ export function initAuthProvider(db: App.Locals["server"]["db"]) {
 			}
 		},
 		validateSessionToken: async (sessionToken: string) => {
-			// Hash the session token to use as the session ID that's stored in the database
-			const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(sessionToken)))
+			const sessionId = hashStr(sessionToken)
 
 			// Retrieve the session and user data from the database
 			const [dbResult] = await db.client

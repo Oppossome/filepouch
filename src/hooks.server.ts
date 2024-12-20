@@ -16,7 +16,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.server = server
 
 	// Retrieve the session token from the cookies
-	const sessionToken = event.cookies.get(server.auth.sessionCookieName)
+	const sessionToken = event.cookies.get(server.auth.sessionCookieName, {})
 	if (!sessionToken) {
 		event.locals.user = null
 		event.locals.session = null

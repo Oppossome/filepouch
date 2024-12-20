@@ -1,11 +1,12 @@
 import { spawn } from "child_process"
 import { env } from "process"
 
-import { drizzle, type PostgresJsDatabase } from "drizzle-orm/postgres-js"
+import { drizzle } from "drizzle-orm/postgres-js"
 import { test as base } from "@playwright/test"
 import postgres from "postgres"
 
-import * as schema from "../../src/lib/server/db/schema"
+import * as schema from "$lib/server/db/schema"
+import type { DBProvider } from "$lib/server/db"
 
 async function createDatabase() {
 	const databaseID = crypto.randomUUID().replace(/(\d|-)/g, "")
@@ -37,11 +38,9 @@ async function createDatabase() {
 }
 
 interface Fixture {
-	db: {
-		client: PostgresJsDatabase
-		schema: typeof schema
-	}
+	db: Awaited<ReturnType<DBProvider>>
 }
+
 export const test = base.extend<Fixture>({
 	db: async ({ page }, use) => {
 		// Create a new database for the test
@@ -49,7 +48,7 @@ export const test = base.extend<Fixture>({
 
 		// Set the database ID as a header, so the server knows which database to use
 		await page.setExtraHTTPHeaders({ "X-Playwright-DB": url })
-		await use({ client: drizzle(client), schema })
+		await use({ client: drizzle(client), tables: schema })
 
 		// Teardown the database after the test
 		await client.end()

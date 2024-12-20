@@ -9,7 +9,7 @@ importers:
   .:
     dependencies:
       '@node-rs/argon2':
-        specifier: ^1.1.0
+        specifier: ^1.8.3
         version: 1.8.3
       '@oslojs/crypto':
         specifier: ^1.0.1
@@ -21,20 +21,20 @@ importers:
         specifier: ^0.38.2
         version: 0.38.2(@types/react@19.0.1)(postgres@3.4.5)(react@18.3.1)
       postgres:
-        specifier: ^3.4.4
+        specifier: ^3.4.5
         version: 3.4.5
     devDependencies:
       '@chromatic-com/storybook':
         specifier: ^3.2.2
         version: 3.2.2(react@18.3.1)(storybook@8.4.7(prettier@3.4.2))
       '@eslint/compat':
-        specifier: ^1.2.3
+        specifier: ^1.2.4
         version: 1.2.4(eslint@9.17.0(jiti@1.21.7))
       '@faker-js/faker':
         specifier: ^9.3.0
         version: 9.3.0
       '@playwright/test':
-        specifier: ^1.45.3
+        specifier: ^1.49.1
         version: 1.49.1
       '@storybook/addon-essentials':
         specifier: ^8.4.7
@@ -43,7 +43,7 @@ importers:
         specifier: ^8.4.7
         version: 8.4.7(storybook@8.4.7(prettier@3.4.2))
       '@storybook/addon-svelte-csf':
-        specifier: ^5.0.0-next.19
+        specifier: 5.0.0-next.19
         version: 5.0.0-next.19(@storybook/svelte@8.4.7(storybook@8.4.7(prettier@3.4.2))(svelte@5.14.4))(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.14.4)(vite@6.0.3(@types/node@22.10.2)(jiti@1.21.7)(yaml@2.6.1)))(storybook@8.4.7(prettier@3.4.2))(svelte@5.14.4)(vite@6.0.3(@types/node@22.10.2)(jiti@1.21.7)(yaml@2.6.1))
       '@storybook/blocks':
         specifier: ^8.4.7
@@ -58,13 +58,13 @@ importers:
         specifier: ^8.4.7
         version: 8.4.7(storybook@8.4.7(prettier@3.4.2))
       '@sveltejs/adapter-auto':
-        specifier: ^3.0.0
+        specifier: ^3.3.1
         version: 3.3.1(@sveltejs/kit@2.12.1(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.14.4)(vite@6.0.3(@types/node@22.10.2)(jiti@1.21.7)(yaml@2.6.1)))(svelte@5.14.4)(vite@6.0.3(@types/node@22.10.2)(jiti@1.21.7)(yaml@2.6.1)))
       '@sveltejs/kit':
-        specifier: ^2.9.0
+        specifier: ^2.12.1
         version: 2.12.1(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.14.4)(vite@6.0.3(@types/node@22.10.2)(jiti@1.21.7)(yaml@2.6.1)))(svelte@5.14.4)(vite@6.0.3(@types/node@22.10.2)(jiti@1.21.7)(yaml@2.6.1))
       '@sveltejs/vite-plugin-svelte':
-        specifier: ^5.0.0
+        specifier: ^5.0.3
         version: 5.0.3(svelte@5.14.4)(vite@6.0.3(@types/node@22.10.2)(jiti@1.21.7)(yaml@2.6.1))
       '@types/node':
         specifier: ^22.10.2
@@ -78,11 +78,14 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      date-fns:
+        specifier: ^4.1.0
+        version: 4.1.0
       drizzle-kit:
         specifier: ^0.30.1
         version: 0.30.1
       eslint:
-        specifier: ^9.7.0
+        specifier: ^9.17.0
         version: 9.17.0(jiti@1.21.7)
       eslint-config-prettier:
         specifier: ^9.1.0
@@ -94,22 +97,22 @@ importers:
         specifier: ^2.31.0
         version: 2.31.0(@typescript-eslint/parser@8.18.1(eslint@9.17.0(jiti@1.21.7))(typescript@5.7.2))(eslint-import-resolver-typescript@3.7.0)(eslint@9.17.0(jiti@1.21.7))
       eslint-plugin-svelte:
-        specifier: ^2.36.0
+        specifier: ^2.46.1
         version: 2.46.1(eslint@9.17.0(jiti@1.21.7))(svelte@5.14.4)
       formsnap:
         specifier: ^2.0.0
         version: 2.0.0(svelte@5.14.4)(sveltekit-superforms@2.22.1(@sveltejs/kit@2.12.1(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.14.4)(vite@6.0.3(@types/node@22.10.2)(jiti@1.21.7)(yaml@2.6.1)))(svelte@5.14.4)(vite@6.0.3(@types/node@22.10.2)(jiti@1.21.7)(yaml@2.6.1)))(@types/json-schema@7.0.15)(svelte@5.14.4)(typescript@5.7.2))
       globals:
-        specifier: ^15.0.0
+        specifier: ^15.14.0
         version: 15.14.0
       prettier:
-        specifier: ^3.3.2
+        specifier: ^3.4.2
         version: 3.4.2
       prettier-plugin-svelte:
-        specifier: ^3.2.6
+        specifier: ^3.3.2
         version: 3.3.2(prettier@3.4.2)(svelte@5.14.4)
       prettier-plugin-tailwindcss:
-        specifier: ^0.6.5
+        specifier: ^0.6.9
         version: 0.6.9(prettier-plugin-svelte@3.3.2(prettier@3.4.2)(svelte@5.14.4))(prettier@3.4.2)
       storybook:
         specifier: ^8.4.7
@@ -118,7 +121,7 @@ importers:
         specifier: ^5.14.4
         version: 5.14.4
       svelte-check:
-        specifier: ^4.0.0
+        specifier: ^4.1.1
         version: 4.1.1(svelte@5.14.4)(typescript@5.7.2)
       sveltekit-superforms:
         specifier: ^2.22.1
@@ -130,7 +133,7 @@ importers:
         specifier: ^0.3.0
         version: 0.3.0(tailwindcss@3.4.17)
       tailwindcss:
-        specifier: ^3.4.9
+        specifier: ^3.4.17
         version: 3.4.17
       tailwindcss-animate:
         specifier: ^1.0.7
@@ -139,16 +142,16 @@ importers:
         specifier: ^10.16.0
         version: 10.16.0
       typescript:
-        specifier: ^5.0.0
+        specifier: ^5.7.2
         version: 5.7.2
       typescript-eslint:
-        specifier: ^8.0.0
+        specifier: ^8.18.1
         version: 8.18.1(eslint@9.17.0(jiti@1.21.7))(typescript@5.7.2)
       vite:
-        specifier: ^6.0.0
+        specifier: ^6.0.3
         version: 6.0.3(@types/node@22.10.2)(jiti@1.21.7)(yaml@2.6.1)
       vitest:
-        specifier: ^2.0.4
+        specifier: ^2.1.8
         version: 2.1.8(@types/node@22.10.2)
       zod:
         specifier: ^3.24.1
@@ -1899,6 +1902,9 @@ packages:
   data-view-byte-offset@1.0.0:
     resolution: {integrity: sha512-t/Ygsytq+R995EJ5PZlD4Cu56sWa8InXySaViRzw9apusqsOO2bQP+SbYzAhR0pFKoB+43lYy8rWban9JSuXnA==}
     engines: {node: '>= 0.4'}
+
+  date-fns@4.1.0:
+    resolution: {integrity: sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==}
 
   dayjs@1.11.13:
     resolution: {integrity: sha512-oaMBel6gjolK862uaPQOVTA7q3TZhuSvuMQAAglQDOWYO9A91IrAOUJEyKVlqJlHE0vq5p5UXxzdPfMH/x6xNg==}
@@ -5744,6 +5750,8 @@ snapshots:
       call-bind: 1.0.8
       es-errors: 1.3.0
       is-data-view: 1.0.2
+
+  date-fns@4.1.0: {}
 
   dayjs@1.11.13:
     optional: true
