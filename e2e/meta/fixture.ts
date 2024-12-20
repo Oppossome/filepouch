@@ -20,8 +20,8 @@ async function createDatabase() {
 	const databaseURL = `${env.DATABASE_URL}/${databaseID}`
 	await new Promise<void>((resolve, reject) => {
 		const process = spawn("pnpm", ["db:push", "--force"], {
+			// stdio: "inherit", // Uncomment this line to see the output of the db:push command
 			env: { ...env, DATABASE_URL: databaseURL },
-			stdio: "inherit",
 		})
 
 		process.on("close", (code) => {
