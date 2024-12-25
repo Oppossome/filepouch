@@ -1,26 +1,11 @@
-<script module lang="ts">
-	import { z } from "zod"
-
-	import * as schemas from "$lib/schemas.ts"
-
-	export const registerSchema = z
-		.object({
-			username: schemas.user_name,
-			password: schemas.user_password,
-			password_confirmation: schemas.user_password,
-		})
-		.refine((data) => data.password === data.password_confirmation, {
-			message: "Passwords do not match",
-			path: ["password_confirmation"],
-		})
-</script>
-
 <script lang="ts">
 	import { zodClient } from "sveltekit-superforms/adapters"
 	import { superForm } from "sveltekit-superforms"
 
 	import * as Form from "$lib/components/ui/form"
 	import { Input } from "$lib/components/ui/input"
+
+	import { registerSchema } from "../schema"
 
 	const form = superForm(
 		{

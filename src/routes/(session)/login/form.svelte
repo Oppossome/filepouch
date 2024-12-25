@@ -1,20 +1,11 @@
-<script module lang="ts">
-	import { z } from "zod"
-
-	import * as schemas from "$lib/schemas.ts"
-
-	export const loginSchema = z.object({
-		username: schemas.user_name,
-		password: schemas.user_password,
-	})
-</script>
-
 <script lang="ts">
 	import { zodClient } from "sveltekit-superforms/adapters"
 	import { superForm } from "sveltekit-superforms"
 
 	import * as Form from "$lib/components/ui/form"
 	import { Input } from "$lib/components/ui/input"
+
+	import { loginSchema } from "../schema"
 
 	const form = superForm(
 		{

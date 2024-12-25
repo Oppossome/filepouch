@@ -4,7 +4,7 @@ import { fail, setError, superValidate } from "sveltekit-superforms"
 import { zod } from "sveltekit-superforms/adapters"
 
 import type { PageServerLoad, Actions } from "./$types"
-import { loginSchema } from "./form.svelte"
+import { loginSchema } from "../schema"
 
 export const load: PageServerLoad = async (event) => {
 	if (event.locals.user) {

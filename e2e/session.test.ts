@@ -1,7 +1,7 @@
 import { type Page } from "@playwright/test"
 import { eq } from "drizzle-orm"
 
-import { initAuthProvider, sessionCookieName } from "$lib/server/auth"
+import { AuthProvider, sessionCookieName } from "$lib/server/auth"
 import { hashStr, randomStr } from "$lib/utils"
 
 import { expect, test } from "./meta/fixture"
@@ -26,7 +26,6 @@ test("Register", async ({ db, page }) => {
 	const dbUsers = await db.client.select().from(db.schema.user)
 	expect(dbUsers).toHaveLength(1)
 	expect(dbUsers[0].username).toBe("test")
-	expect(dbUsers[0].role).toBe("user")
 
 	// Get the session token from the user's cookies
 	const userCookies = await page.context().cookies()
@@ -48,7 +47,7 @@ test("Register", async ({ db, page }) => {
 // MARK: Login
 test("Login", async ({ db, page }) => {
 	// Register a user in our database
-	const authProvider = initAuthProvider(db)
+	const authProvider = new AuthProvider(db)
 	const [newUser] = await db.client
 		.insert(db.schema.user)
 		.values({
@@ -83,7 +82,7 @@ test("Login", async ({ db, page }) => {
 // MARK: Logout
 test("Logout", async ({ baseURL, db, page }) => {
 	// Register a user in our database
-	const authProvider = initAuthProvider(db)
+	const authProvider = new AuthProvider(db)
 	const [newUser] = await db.client
 		.insert(db.schema.user)
 		.values({
@@ -128,7 +127,7 @@ test("Logout", async ({ baseURL, db, page }) => {
 // MARK: Old Session Refresh
 test("Old Session Refresh", async ({ baseURL, db, page }) => {
 	// Register a user in our database
-	const authProvider = initAuthProvider(db)
+	const authProvider = new AuthProvider(db)
 	const [newUser] = await db.client
 		.insert(db.schema.user)
 		.values({
@@ -178,7 +177,7 @@ test("Old Session Refresh", async ({ baseURL, db, page }) => {
 // MARK: Expired Session
 test("Expired Session", async ({ baseURL, db, page }) => {
 	// Register a user in our database
-	const authProvider = initAuthProvider(db)
+	const authProvider = new AuthProvider(db)
 	const [newUser] = await db.client
 		.insert(db.schema.user)
 		.values({

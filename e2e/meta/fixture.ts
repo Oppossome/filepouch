@@ -5,8 +5,7 @@ import { drizzle } from "drizzle-orm/postgres-js"
 import { test as base } from "@playwright/test"
 import postgres from "postgres"
 
-import * as schema from "$lib/server/db/schema"
-import type { DBProvider } from "$lib/server/db"
+import * as schema from "$lib/server/database.schema"
 
 async function createDatabase() {
 	const databaseID = crypto.randomUUID().replace(/(\d|-)/g, "")
@@ -38,7 +37,7 @@ async function createDatabase() {
 }
 
 interface Fixture {
-	db: Awaited<ReturnType<DBProvider>>
+	db: App.Locals["server"]["db"]
 }
 
 export const test = base.extend<Fixture>({
