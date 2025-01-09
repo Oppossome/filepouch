@@ -3,7 +3,7 @@ import { type RequestHandler } from "@sveltejs/kit"
 import { eq } from "drizzle-orm"
 
 export const GET: RequestHandler = async ({ locals, params }) => {
-	const { db, upload } = locals.server
+	const { db, file } = locals.server
 
 	if (!params.upload_id) {
 		error(400, "upload_id is a required parameter")
@@ -19,10 +19,10 @@ export const GET: RequestHandler = async ({ locals, params }) => {
 		error(404, "Upload not found")
 	}
 
-	const file = await upload.download(dbResult.filePath)
+	const blob = await file.download(dbResult.filePath)
 	const fileName = params.file_name ?? dbResult.fileName
 
-	return new Response(file, {
+	return new Response(blob, {
 		headers: {
 			"Content-Type": dbResult.fileType,
 			"Content-Disposition": `inline; filename*=UTF-8''${encodeURIComponent(fileName)}`,

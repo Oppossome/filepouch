@@ -13,7 +13,7 @@ const handleInitServer: Handle = async ({ event, resolve }) => {
 	event.locals.server = {
 		db,
 		auth: new AuthProvider(db),
-		upload: uploadProvider,
+		file: uploadProvider,
 	}
 
 	// Continue processing the request

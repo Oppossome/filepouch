@@ -22,7 +22,7 @@ export const actions: Actions = {
 
 		// Upload the file
 		const server = event.locals.server
-		const filePath = await server.upload.upload(uploadedFile)
+		const filePath = await server.file.upload(uploadedFile)
 		await server.db.client.insert(server.db.schema.upload).values({
 			fileName: uploadedFile.name,
 			filePath: filePath,

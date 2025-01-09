@@ -8,7 +8,7 @@ declare global {
 			server: {
 				auth: import("$lib/server/auth").AuthProvider
 				db: Awaited<ReturnType<import("$lib/server/database").DatabaseProvider["get"]>>
-				upload: import("$lib/server/file").FileProvider
+				file: import("$lib/server/file").FileProvider
 			}
 		}
 	}
