@@ -75,6 +75,7 @@
 		"@oslojs/crypto": "^1.0.1",
 		"@oslojs/encoding": "^1.1.0",
 		"drizzle-orm": "^0.38.2",
-		"postgres": "^3.4.5"
+		"postgres": "^3.4.5",
+		"sveltekit-openapi": "^0.2.2"
 	}
 }

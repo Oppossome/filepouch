@@ -1,4 +1,3 @@
-// import { index, integer, t.pgTable, t.text, t.timestamp, t.uuid } from "drizzle-orm/pg-core"
 import * as t from "drizzle-orm/pg-core"
 
 // MARK: Base
@@ -15,11 +14,15 @@ export const baseResource = {
 
 // MARK: User
 
-export const user = t.pgTable("user", {
-	...baseResource,
-	username: t.text("username").notNull().unique(),
-	passwordHash: t.text("password_hash").notNull(),
-})
+export const user = t.pgTable(
+	"user",
+	{
+		...baseResource,
+		username: t.text("username").notNull().unique(),
+		passwordHash: t.text("password_hash").notNull(),
+	},
+	(table) => [t.index("user_created_at_idx").on(table.createdAt)],
+)
 
 export type User = typeof user.$inferSelect
 

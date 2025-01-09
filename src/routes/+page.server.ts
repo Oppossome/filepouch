@@ -31,6 +31,6 @@ export const actions: Actions = {
 			userId: event.locals.user.id,
 		})
 
-		redirect(302, `/user/${event.locals.user.id}`)
+		redirect(302, `/users/${event.locals.user.id}`)
 	},
 }

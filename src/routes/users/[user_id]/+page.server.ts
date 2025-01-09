@@ -4,7 +4,8 @@ import { error } from "@sveltejs/kit"
 import type { PageServerLoad } from "./$types"
 
 export const load: PageServerLoad = async (event) => {
-	const db = event.locals.server.db
+	const { db } = event.locals.server
+
 	const [user] = await db.client
 		.select({
 			id: db.schema.user.id,

@@ -20,7 +20,7 @@ test("Register", async ({ db, page }) => {
 
 	await fillForm(page, { Username: "test", Password: "password", "Confirm Password": "password" })
 	await page.getByText("Submit").click()
-	await page.waitForURL(/^.*\/user/)
+	await page.waitForURL(/^.*\/users/)
 
 	// Check that the user was created in the database
 	const dbUsers = await db.client.select().from(db.schema.user)

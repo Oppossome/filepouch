@@ -2,29 +2,29 @@ import { error } from "@sveltejs/kit"
 import { type RequestHandler } from "@sveltejs/kit"
 import { eq } from "drizzle-orm"
 
-export const GET: RequestHandler = async (event) => {
-	const server = event.locals.server
+export const GET: RequestHandler = async ({ locals, params }) => {
+	const { db, upload } = locals.server
 
-	if (!event.params.upload_id) {
+	if (!params.upload_id) {
 		error(400, "upload_id is a required parameter")
 	}
 
-	const [upload] = await server.db.client
+	const [dbResult] = await db.client
 		.select()
-		.from(server.db.schema.upload)
-		.where(eq(server.db.schema.upload.id, event.params.upload_id))
+		.from(db.schema.upload)
+		.where(eq(db.schema.upload.id, params.upload_id))
 		.limit(1)
 
-	if (!upload) {
+	if (!dbResult) {
 		error(404, "Upload not found")
 	}
 
-	const file = await server.upload.download(upload.filePath)
-	const fileName = event.params.file_name ?? upload.fileName
+	const file = await upload.download(dbResult.filePath)
+	const fileName = params.file_name ?? dbResult.fileName
 
 	return new Response(file, {
 		headers: {
-			"Content-Type": upload.fileType,
+			"Content-Type": dbResult.fileType,
 			"Content-Disposition": `inline; filename*=UTF-8''${encodeURIComponent(fileName)}`,
 		},
 	})
