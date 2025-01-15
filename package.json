@@ -27,6 +27,7 @@
 		"@chromatic-com/storybook": "^3.2.2",
 		"@eslint/compat": "^1.2.4",
 		"@faker-js/faker": "^9.3.0",
+		"@hey-api/openapi-ts": "^0.61.3",
 		"@playwright/test": "^1.49.1",
 		"@storybook/addon-essentials": "^8.4.7",
 		"@storybook/addon-interactions": "^8.4.7",
@@ -71,11 +72,13 @@
 		"zod": "^3.24.1"
 	},
 	"dependencies": {
+		"@hey-api/client-fetch": "^0.6.0",
 		"@node-rs/argon2": "^1.8.3",
 		"@oslojs/crypto": "^1.0.1",
 		"@oslojs/encoding": "^1.1.0",
 		"drizzle-orm": "^0.38.2",
 		"postgres": "^3.4.5",
+		"sharp": "^0.33.5",
 		"sveltekit-openapi": "^0.2.2"
 	}
 }

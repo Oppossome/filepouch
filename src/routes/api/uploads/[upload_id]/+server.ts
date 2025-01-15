@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { eq } from "drizzle-orm"
+import { eq, getTableColumns } from "drizzle-orm"
 
 import { upload, user } from "$lib/resources"
 import { api } from "$lib/server/api"
@@ -32,19 +32,13 @@ export const GET = api.defineEndpoint(
 		const { db } = locals.server
 
 		const [dbResult] = await db.client
-			.select()
+			.select({ ...getTableColumns(db.schema.upload), user: db.schema.user })
 			.from(db.schema.upload)
 			.where(eq(db.schema.upload.id, params.path.upload_id))
 			.innerJoin(db.schema.user, eq(db.schema.upload.userId, db.schema.user.id))
 			.limit(1)
 
-		if (!upload) return json(404)
-
-		return json(200, {
-			upload: {
-				...dbResult.upload,
-				user: dbResult.user,
-			},
-		})
+		if (!dbResult) return json(404)
+		return json(200, { upload: dbResult })
 	},
 )

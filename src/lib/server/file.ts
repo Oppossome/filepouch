@@ -43,6 +43,6 @@ class LocalFileProvider extends FileProvider {
 	}
 
 	async delete(filePath: string) {
-		await fs.unlink(filePath)
+		await fs.rm(filePath)
 	}
 }

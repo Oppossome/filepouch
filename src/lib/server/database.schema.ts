@@ -49,6 +49,7 @@ export const upload = t.pgTable(
 		filePath: t.text("file_path").notNull(), // The path to the file on the server
 		fileSize: t.integer("file_size").notNull(), // The size of the file in bytes
 		fileType: t.text("file_type").notNull(), // The MIME type of the file
+		fileAspectRatio: t.real("file_aspect_ratio"), // The aspect ratio of the file
 		userId: t
 			.uuid("user_id")
 			.notNull()

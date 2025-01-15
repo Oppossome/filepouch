@@ -1,12 +1,13 @@
 import type { Handle } from "@sveltejs/kit"
 import { sequence } from "@sveltejs/kit/hooks"
 
-import { AuthProvider, DatabaseProvider, FileProvider } from "$lib/server"
+import { generateAPIClient, AuthProvider, DatabaseProvider, FileProvider } from "$lib/server"
 
 // MARK: Initialization
 
 const databaseProvider = await DatabaseProvider.init()
 const uploadProvider = await FileProvider.init()
+generateAPIClient()
 
 const handleInitServer: Handle = async ({ event, resolve }) => {
 	const db = await databaseProvider.get(event)
