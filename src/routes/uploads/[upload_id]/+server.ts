@@ -1,7 +1,6 @@
 import { error } from "@sveltejs/kit"
 import { type RequestHandler } from "@sveltejs/kit"
 import { eq } from "drizzle-orm"
-import { sharp } from "sharp"
 
 /**
  * Retrieves the file associated with the given upload ID.

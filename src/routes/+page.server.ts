@@ -1,6 +1,20 @@
 import { fail, redirect } from "@sveltejs/kit"
+import sharp from "sharp"
 
 import type { Actions } from "./$types"
+
+async function getAspectRatio(blob: Blob): Promise<number> {
+	try {
+		const buffer = await blob.arrayBuffer()
+
+		// Because the width and height don't take the exif orientation into account,
+		// rotate the image accordingly
+		const metadata = await sharp(buffer).rotate().metadata()
+		return metadata.width! / metadata.height!
+	} catch {
+		return 1
+	}
+}
 
 export const actions: Actions = {
 	upload: async (event) => {
@@ -28,6 +42,7 @@ export const actions: Actions = {
 			filePath: filePath,
 			fileSize: uploadedFile.size,
 			fileType: uploadedFile.type,
+			fileAspectRatio: await getAspectRatio(uploadedFile),
 			userId: event.locals.user.id,
 		})
 
