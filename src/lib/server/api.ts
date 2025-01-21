@@ -19,11 +19,13 @@ export async function generateAPIClient() {
 	await writeFile(schemaOutput, JSON.stringify(await api.generateSpec(), null, 2))
 
 	// Dynamically import the client generator so it's only a development dependency
-	const { createClient } = await import("@hey-api/openapi-ts")
+	const { createClient, defaultPlugins } = await import("@hey-api/openapi-ts")
+
 	await createClient({
 		client: "@hey-api/client-fetch",
 		input: schemaOutput,
-		output: resolve("src/lib/client"),
+		output: resolve("src/lib/client/generated"),
+		plugins: [...defaultPlugins, { dates: true, name: "@hey-api/transformers" }],
 	})
 
 	// Cleanup after ourselves

@@ -20,7 +20,7 @@ export const GET = api.defineEndpoint(
 				description: "OK",
 				content: z.object({
 					uploads: z.array(upload.extend({ user })),
-					next_page_token: z.date().optional(),
+					next_page_token: z.date().pipe(z.coerce.string()).optional(),
 				}),
 			},
 		},

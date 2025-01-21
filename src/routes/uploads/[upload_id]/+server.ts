@@ -1,4 +1,4 @@
-import { error } from "@sveltejs/kit"
+import { error, redirect } from "@sveltejs/kit"
 import { type RequestHandler } from "@sveltejs/kit"
 import { eq } from "drizzle-orm"
 
@@ -22,10 +22,11 @@ export const GET: RequestHandler = async ({ locals, params }) => {
 		error(404, "Upload not found")
 	}
 
-	const blob = await file.download(dbResult.filePath)
-	const fileName = params.file_name ?? dbResult.fileName
+	const blobOrUrl = await file.download(dbResult.filePath)
+	if (typeof blobOrUrl === "string") redirect(308, blobOrUrl)
 
-	return new Response(blob, {
+	const fileName = params.file_name ?? dbResult.fileName
+	return new Response(blobOrUrl, {
 		headers: {
 			"Content-Type": dbResult.fileType,
 			"Content-Disposition": `inline; filename*=UTF-8''${encodeURIComponent(fileName)}`,

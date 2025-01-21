@@ -41,7 +41,7 @@ export class AuthProvider {
 		const sessionId = hashStr(sessionToken)
 		const [dbResult] = await this.db.client
 			.select({
-				user: { id: this.db.schema.user.id, username: this.db.schema.user.username },
+				user: this.db.schema.user,
 				session: this.db.schema.session,
 			})
 			.from(this.db.schema.session)

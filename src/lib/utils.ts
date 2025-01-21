@@ -81,3 +81,13 @@ export function randomStr(length: number) {
 export function hashStr(str: string) {
 	return encodeHexLowerCase(sha256(new TextEncoder().encode(str)))
 }
+
+// MARK: wait
+
+export function wait(ms: number): Promise<void> {
+	return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+// MARK: .svelte exports
+
+export * from "./utils.svelte"

@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { getUploads } from "$lib/client"
 	import * as Avatar from "$lib/components/ui/avatar"
+	import * as Waterfall from "$lib/components/ui/waterfall"
 
 	import type { PageData } from "./$types"
 
@@ -8,6 +10,8 @@
 	}
 
 	let { data }: Props = $props()
+
+	let userPosts = getUploads({ user_id: data.user.id })
 </script>
 
 <div class="flex flex-col items-center p-4">
@@ -24,25 +28,16 @@
 	</div>
 </div>
 
-<!-- <div class="w-[48rem] border border-red-400"></div> -->
-
-<!-- <style lang="postcss">
-	.c_user {
-		& .header {
-			display: flex;
-			flex-direction: column;
-
-			& .user {
-				display: flex;
-				align-items: center;
-
-				width: 48rem;
-				border: 1px solid red;
-
-				h1 {
-					@apply text-sm;
-				}
-			}
-		}
-	}
-</style> -->
+{#if $userPosts.data?.pages}
+	<Waterfall.Root
+		items={$userPosts.data.pages.flatMap((page) => page.data?.uploads ?? [])}
+		getAspectRatio={(item) => item.fileAspectRatio}
+		onReachedEnd={$userPosts.hasNextPage ? $userPosts.fetchNextPage : undefined}
+	>
+		{#snippet children(item)}
+			<Waterfall.Item href="/uploads/{item.id}" upload={item} />
+		{/snippet}
+	</Waterfall.Root>
+{:else if $userPosts.isError}
+	<!--  -->
+{/if}

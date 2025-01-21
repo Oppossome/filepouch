@@ -1,6 +1,8 @@
 <script lang="ts" generics="I">
 	import type { Snippet } from "svelte"
 
+	import { onIntersecting } from "$lib/utils.svelte"
+
 	// eslint-disable-next-line no-undef
 	type Item = I
 
@@ -8,14 +10,15 @@
 		class?: string
 		items: Item[]
 		getAspectRatio: (item: Item) => number
+		onReachedEnd?: () => void
 		children: Snippet<[item: Item]>
 	}
 
-	let { class: classes = "", items, getAspectRatio, children }: Props = $props()
+	let { class: classes = "", items, getAspectRatio, onReachedEnd, children }: Props = $props()
 
 	let elementWidth: number = $state(0)
+	let columnCount: number = $derived(Math.max(1, Math.floor(elementWidth / 300)))
 	let columns = $derived.by(() => {
-		const columnCount = Math.max(1, Math.floor(elementWidth / 300))
 		const columns = Array.from({ length: columnCount }, () => ({ items: Array<Item>(), height: 0 }))
 
 		for (const item of items) {
@@ -32,12 +35,40 @@
 	})
 </script>
 
-<div class="c_waterfall flex {classes}" bind:clientWidth={elementWidth}>
+<div class="c_waterfall {classes}" bind:clientWidth={elementWidth}>
 	{#each columns as column}
-		<div class="w-full sm:w-[300px]">
+		<div class="column">
 			{#each column.items as item}
 				{@render children(item)}
 			{/each}
+			{#if onReachedEnd}
+				<div
+					class="h-1"
+					use:onIntersecting={{ callback: (intersecting) => intersecting && onReachedEnd() }}
+				></div>
+			{/if}
 		</div>
 	{/each}
 </div>
+
+<style lang="postcss">
+	.c_waterfall {
+		display: flex;
+		gap: 0.5rem;
+		justify-content: center;
+		padding: 0.5rem;
+
+		& .column {
+			display: flex;
+			flex-direction: column;
+			gap: inherit;
+
+			width: 100%;
+			max-width: 300px;
+
+			&:only-child {
+				max-width: unset;
+			}
+		}
+	}
+</style>

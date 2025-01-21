@@ -25,6 +25,7 @@ export const user = t.pgTable(
 )
 
 export type User = typeof user.$inferSelect
+export type NewUser = typeof user.$inferInsert
 
 // MARK: Session
 
@@ -38,6 +39,7 @@ export const session = t.pgTable("session", {
 })
 
 export type Session = typeof session.$inferSelect
+export type NewSession = typeof session.$inferInsert
 
 // MARK: Upload
 
@@ -49,7 +51,7 @@ export const upload = t.pgTable(
 		filePath: t.text("file_path").notNull(), // The path to the file on the server
 		fileSize: t.integer("file_size").notNull(), // The size of the file in bytes
 		fileType: t.text("file_type").notNull(), // The MIME type of the file
-		fileAspectRatio: t.real("file_aspect_ratio"), // The aspect ratio of the file
+		fileAspectRatio: t.real("file_aspect_ratio").notNull(), // The aspect ratio of the file
 		userId: t
 			.uuid("user_id")
 			.notNull()
@@ -59,3 +61,4 @@ export const upload = t.pgTable(
 )
 
 export type Upload = typeof upload.$inferSelect
+export type NewUpload = typeof upload.$inferInsert
