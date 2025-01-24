@@ -88,6 +88,17 @@ export function wait(ms: number): Promise<void> {
 	return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
+// MARK: loadImage
+
+export function loadImage(url: string): Promise<HTMLImageElement> {
+	return new Promise((resolve, reject) => {
+		const image = new Image()
+		image.onload = () => resolve(image)
+		image.onerror = reject
+		image.src = url
+	})
+}
+
 // MARK: .svelte exports
 
 export * from "./utils.svelte"

@@ -44,6 +44,7 @@
 			{#if onReachedEnd}
 				<div
 					class="h-1"
+					data-testid="wf-end-observer"
 					use:onIntersecting={{ callback: (intersecting) => intersecting && onReachedEnd() }}
 				></div>
 			{/if}
@@ -54,9 +55,9 @@
 <style lang="postcss">
 	.c_waterfall {
 		display: flex;
-		gap: 0.5rem;
+		gap: theme("gap.2");
 		justify-content: center;
-		padding: 0.5rem;
+		padding: theme("padding.2");
 
 		& .column {
 			display: flex;

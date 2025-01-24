@@ -4,7 +4,7 @@
 	import * as Logo from "./index"
 
 	const { Story } = defineMeta({
-		title: "UI/Logo/Root",
+		title: "Atoms/Logo/Root",
 		component: Logo.Root,
 	})
 </script>

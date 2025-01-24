@@ -14,7 +14,6 @@ export type GetUploadsResponse = ({
         createdAt: Date;
         updatedAt: (Date) | null;
         fileName: string;
-        filePath: string;
         fileSize: number;
         fileType: string;
         fileAspectRatio: number;
@@ -43,7 +42,6 @@ export type GetUploadResponse = ({
         createdAt: Date;
         updatedAt: (Date) | null;
         fileName: string;
-        filePath: string;
         fileSize: number;
         fileType: string;
         fileAspectRatio: number;
@@ -65,7 +63,6 @@ export type UploadFilesResponse = ({
         createdAt: Date;
         updatedAt: (Date) | null;
         fileName: string;
-        filePath: string;
         fileSize: number;
         fileType: string;
         fileAspectRatio: number;

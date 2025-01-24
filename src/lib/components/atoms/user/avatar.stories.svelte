@@ -3,20 +3,18 @@
 
 	import { ResourceSeeder } from "$lib/resources.seeder"
 
-	import Toolbar from "./toolbar.svelte"
+	import * as User from "./index"
 
 	const { Story } = defineMeta({
-		title: "Routes/Toolbar",
-		component: Toolbar,
+		title: "Atoms/User/Avatar",
+		component: User.Avatar,
 	})
 
 	const [user] = new ResourceSeeder(123123).user()
 </script>
 
-<Story name="With User">
-	<Toolbar {user} />
-</Story>
-
-<Story name="Without User">
-	<Toolbar user={undefined} />
+<Story name="Default">
+	{#snippet children(args)}
+		<User.Avatar {user} {...args} />
+	{/snippet}
 </Story>

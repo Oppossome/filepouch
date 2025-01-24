@@ -23,8 +23,16 @@
 	<!-- Upload wraps the content of the page in order to provide lower context -->
 	<Upload>
 		<Toolbar user={data.local_user} />
-		{@render children()}
-		<SvelteQueryDevtools />
-		<Toaster />
+		<main>{@render children()}</main>
 	</Upload>
+
+	<Toaster />
+	<SvelteQueryDevtools />
 </QueryClientProvider>
+
+<style lang="postcss">
+	main {
+		max-width: 120rem;
+		margin: 0 auto;
+	}
+</style>

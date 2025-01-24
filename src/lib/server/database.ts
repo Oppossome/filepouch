@@ -17,7 +17,10 @@ export abstract class DatabaseProvider {
 
 	static async init() {
 		switch (true) {
-			case import.meta.env.DEV && env.PW_TEST !== undefined:
+			case env.PW_TEST !== undefined:
+				if (import.meta.env.MODE !== "development")
+					throw new Error("Playwright tests can only run in development")
+
 				return new PlaywrightDatabaseProvider()
 			case env.DATABASE_URL !== undefined:
 				return new StandardDatabaseProvider(env.DATABASE_URL)

@@ -5,7 +5,7 @@
 	import * as Waterfall from "./index"
 
 	const { Story } = defineMeta({
-		title: "UI/Waterfall/Root",
+		title: "Atoms/Waterfall/Root",
 		component: Waterfall.Root,
 	})
 

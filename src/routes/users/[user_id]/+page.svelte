@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { getUploads } from "$lib/client"
-	import * as Avatar from "$lib/components/ui/avatar"
-	import * as Waterfall from "$lib/components/ui/waterfall"
+	import * as User from "$lib/components/atoms/user"
+	import * as Waterfall from "$lib/components/atoms/waterfall"
+	import * as Upload from "$lib/components/atoms/upload"
 
 	import type { PageData } from "./$types"
 
@@ -14,16 +15,16 @@
 	let userPosts = getUploads({ user_id: data.user.id })
 </script>
 
-<div class="flex flex-col items-center p-4">
-	<div class="flex w-full items-center gap-2 md:w-[48rem]">
-		<Avatar.Root class="size-14">
-			<Avatar.Fallback class="uppercase">
-				{data.user.username[0]}
-			</Avatar.Fallback>
-		</Avatar.Root>
+<div class="mx-auto flex justify-between p-8 sm:w-2/3">
+	<div class="flex items-center gap-2 pb-4">
+		<User.Avatar user={data.user} class="size-16" />
 		<div class="flex flex-col">
-			<h1>{data.user.username}</h1>
-			<p class="text-sm text-muted-foreground">Joined {data.user.createdAt.getFullYear()}</p>
+			<span class="text-xl">
+				{data.user.username}
+			</span>
+			<span class="text-sm text-muted-foreground">
+				Joined {data.user.createdAt.getFullYear()}
+			</span>
 		</div>
 	</div>
 </div>
@@ -35,7 +36,7 @@
 		onReachedEnd={$userPosts.hasNextPage ? $userPosts.fetchNextPage : undefined}
 	>
 		{#snippet children(item)}
-			<Waterfall.Item href="/uploads/{item.id}" upload={item} />
+			<Upload.Root href="/uploads/{item.id}" upload={item} />
 		{/snippet}
 	</Waterfall.Root>
 {:else if $userPosts.isError}

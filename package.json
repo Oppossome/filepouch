@@ -22,7 +22,8 @@
 		"db:migrate": "drizzle-kit migrate",
 		"db:studio": "drizzle-kit studio",
 		"storybook": "BROWSER=none storybook dev -p 6006",
-		"build-storybook": "storybook build"
+		"build-storybook": "storybook build",
+		"prepare": "svelte-kit sync"
 	},
 	"devDependencies": {
 		"@chromatic-com/storybook": "^3.2.2",
@@ -33,7 +34,7 @@
 		"@storybook/addon-actions": "^8.5.0",
 		"@storybook/addon-essentials": "^8.4.7",
 		"@storybook/addon-interactions": "^8.4.7",
-		"@storybook/addon-svelte-csf": "5.0.0-next.19",
+		"@storybook/addon-svelte-csf": "5.0.0-next.23",
 		"@storybook/blocks": "^8.4.7",
 		"@storybook/svelte": "^8.4.7",
 		"@storybook/sveltekit": "^8.4.7",
@@ -67,7 +68,7 @@
 		"stylelint-config-clean-order": "^7.0.0",
 		"stylelint-config-recommended-scss": "^14.1.0",
 		"stylelint-order": "^6.0.4",
-		"svelte": "^5.19.0",
+		"svelte": "^5.19.2",
 		"svelte-check": "^4.1.1",
 		"sveltekit-superforms": "^2.22.1",
 		"tailwind-merge": "^2.5.5",
