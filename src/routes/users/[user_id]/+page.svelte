@@ -16,9 +16,10 @@
 </script>
 
 <div class="mx-auto flex justify-between p-8 sm:w-2/3">
-	<div class="flex items-center gap-2 pb-4">
+	<div class="flex items-center gap-3 pb-4">
 		<User.Avatar user={data.user} class="size-16" />
-		<div class="flex flex-col">
+
+		<div class="flex flex-col gap-1">
 			<span class="text-xl">
 				{data.user.username}
 			</span>

@@ -28,7 +28,7 @@
 		</div>
 	</div>
 
-	<div class="bg-foreground/5 [&_img]:max-h-[75vh] [&_img]:object-contain">
+	<div class="relative bg-foreground/5 [&_img]:max-h-[75vh] [&_img]:object-contain">
 		<Upload.Content upload={data.upload} />
 	</div>
 </div>
