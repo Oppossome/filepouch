@@ -89,6 +89,6 @@ export default ts.config(
 		},
 	},
 	{
-		ignores: ["build/", ".svelte-kit/", "dist/", "src/lib/client/generated"],
+		ignores: ["build/", ".svelte-kit/", "dist/", "src/lib/client/generated/"],
 	},
 )
