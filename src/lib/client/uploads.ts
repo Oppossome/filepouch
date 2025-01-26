@@ -1,4 +1,4 @@
-import { createInfiniteQuery, createMutation, createQuery } from "@tanstack/svelte-query"
+import { createInfiniteQuery, createQuery } from "@tanstack/svelte-query"
 
 import * as api from "./generated"
 
