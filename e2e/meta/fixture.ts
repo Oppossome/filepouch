@@ -5,8 +5,8 @@ import { drizzle } from "drizzle-orm/postgres-js"
 import { test as base } from "@playwright/test"
 import postgres from "postgres"
 
-import * as schema from "$lib/server/db/schema"
-import type { DBProvider } from "$lib/server/db"
+import * as schema from "$lib/server/database.schema"
+import { DatabaseSeeder } from "$lib/server/database.seed"
 
 async function createDatabase() {
 	const databaseID = crypto.randomUUID().replace(/(\d|-)/g, "")
@@ -38,7 +38,7 @@ async function createDatabase() {
 }
 
 interface Fixture {
-	db: Awaited<ReturnType<DBProvider>>
+	db: App.Locals["server"]["db"] & { seeder: DatabaseSeeder }
 }
 
 export const test = base.extend<Fixture>({
@@ -48,7 +48,9 @@ export const test = base.extend<Fixture>({
 
 		// Set the database ID as a header, so the server knows which database to use
 		await page.setExtraHTTPHeaders({ "X-Playwright-DB": url })
-		await use({ client: drizzle(client), schema })
+
+		const drizzleClient = drizzle(client)
+		await use({ client: drizzleClient, schema, seeder: new DatabaseSeeder(drizzleClient) })
 
 		// Teardown the database after the test
 		await client.end()

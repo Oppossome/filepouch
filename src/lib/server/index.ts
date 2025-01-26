@@ -1,2 +1,4 @@
-export * as auth from "./auth.js"
-export * as db from "./db"
+export * from "$lib/server/api"
+export { AuthProvider } from "$lib/server/auth"
+export { DatabaseProvider } from "$lib/server/database"
+export { FileProvider } from "$lib/server/file"

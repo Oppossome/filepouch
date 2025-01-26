@@ -1,7 +1,28 @@
+import { getContext, hasContext, setContext } from "svelte"
 import { encodeBase64url, encodeHexLowerCase } from "@oslojs/encoding"
 import { sha256 } from "@oslojs/crypto/sha2"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+
+// MARK: ContextPair
+
+export interface ContextPair<Value> {
+	get: ((unsafe?: false) => Value) & ((unsafe: true) => Value | undefined)
+	set(value: Value, force?: boolean): Value
+}
+
+export function defineContextPair<Value>(key: string): ContextPair<Value> {
+	return {
+		get(unsafe?: boolean) {
+			if (!unsafe && !hasContext(key)) throw new Error(`Context of key ${key} doesn't exist`)
+			return getContext(key)
+		},
+		set(value: Value, force?: boolean) {
+			if (!force && hasContext(key)) throw new Error(`Context of key ${key} already exists`)
+			return setContext(key, value)
+		},
+	}
+}
 
 // MARK: cn
 
@@ -60,3 +81,24 @@ export function randomStr(length: number) {
 export function hashStr(str: string) {
 	return encodeHexLowerCase(sha256(new TextEncoder().encode(str)))
 }
+
+// MARK: wait
+
+export function wait(ms: number): Promise<void> {
+	return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
+// MARK: loadImage
+
+export function loadImage(url: string): Promise<HTMLImageElement> {
+	return new Promise((resolve, reject) => {
+		const image = new Image()
+		image.onload = () => resolve(image)
+		image.onerror = reject
+		image.src = url
+	})
+}
+
+// MARK: .svelte exports
+
+export * from "./utils.svelte"

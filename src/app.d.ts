@@ -7,7 +7,8 @@ declare global {
 			session: import("$lib/server/auth").SessionValidationResult["session"]
 			server: {
 				auth: import("$lib/server/auth").AuthProvider
-				db: Awaited<ReturnType<import("$lib/server/db").DBProvider>>
+				db: Awaited<ReturnType<import("$lib/server/database").DatabaseProvider["get"]>>
+				file: import("$lib/server/file").FileProvider
 			}
 		}
 	}

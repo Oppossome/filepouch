@@ -1,7 +1,38 @@
 <script lang="ts">
+	import { QueryClient, QueryClientProvider } from "@tanstack/svelte-query"
+	import { SvelteQueryDevtools } from "@tanstack/svelte-query-devtools"
+	import type { Snippet } from "svelte"
+	import { Toaster } from "svelte-french-toast"
+
+	import Toolbar from "./toolbar.svelte"
+	import Upload from "./upload.svelte"
+	import type { LayoutData } from "./$types"
 	import "../app.css"
 
-	let { children } = $props()
+	interface Props {
+		data: LayoutData
+		children: Snippet<[]>
+	}
+
+	let { data, children }: Props = $props()
+
+	const queryClient = new QueryClient()
 </script>
 
-{@render children()}
+<QueryClientProvider client={queryClient}>
+	<!-- Upload wraps the content of the page in order to provide lower context -->
+	<Upload>
+		<Toolbar user={data.local_user} />
+		<main>{@render children()}</main>
+	</Upload>
+
+	<Toaster />
+	<SvelteQueryDevtools />
+</QueryClientProvider>
+
+<style lang="postcss">
+	main {
+		max-width: 120rem;
+		margin: 0 auto;
+	}
+</style>
